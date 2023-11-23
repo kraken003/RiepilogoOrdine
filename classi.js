@@ -1,5 +1,4 @@
-"use strict";
-class Customer {
+export class Customer {
     constructor(id, firstname, lastname, age, email, phone, locale, billingAddress, shippingAddress) {
         this.id = id;
         this.firstname = firstname;
@@ -12,7 +11,7 @@ class Customer {
         this.shippingAddress = shippingAddress;
     }
 }
-class Address {
+export class Address {
     constructor(street, city, state, postalCode) {
         this.street = street;
         this.city = city;
@@ -20,7 +19,7 @@ class Address {
         this.postalCode = postalCode;
     }
 }
-class OrderLineItem {
+export class OrderLineItem {
     constructor(id, product, amount, quantity) {
         this.id = id;
         this.product = product;
@@ -28,7 +27,7 @@ class OrderLineItem {
         this.quantity = quantity;
     }
 }
-class Order {
+export class Order {
     constructor(orderNumber, orderDate, totalAmount, orderLineItems) {
         this.orderNumber = orderNumber;
         this.orderDate = orderDate;
@@ -36,7 +35,7 @@ class Order {
         this.orderLineItems = orderLineItems;
     }
 }
-class Product {
+export class Product {
     constructor(code, name, variants, description, price, retailer) {
         this.code = code;
         this.name = name;
