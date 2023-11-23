@@ -1,4 +1,4 @@
-class Customer {
+export class Customer {
     constructor(
       public id: string,
       public firstname: string,
@@ -12,7 +12,7 @@ class Customer {
     ) {}
   }
 
-class Address {
+  export class Address {
   constructor(
     public street: string,
     public city: string,
@@ -21,7 +21,7 @@ class Address {
   ) {}
 }
 
-class OrderLineItem {
+export class OrderLineItem {
     constructor(
       public id: string,
       public product: Product,
@@ -30,7 +30,7 @@ class OrderLineItem {
     ) {}
   }
 
-class Order {
+export class Order {
     constructor(
       public orderNumber: string,
       public orderDate: Date,
@@ -39,7 +39,7 @@ class Order {
     ) {}
   }
 
-class Product {
+export class Product {
     constructor(
         public code: string,
         public name: string,
