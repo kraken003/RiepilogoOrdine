@@ -1,3 +1,4 @@
+//script
 import { Product } from './classi.js';
 document.addEventListener('DOMContentLoaded', () => {
     const product1 = new Product('1', 'Prodotto 1', ['Variante A', 'Variante B'], 'Descrizione prodotto 1', 10, 'Retailer 1');

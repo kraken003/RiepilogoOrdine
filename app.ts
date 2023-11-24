@@ -1,3 +1,4 @@
+//script
 import { Product } from './classi.js';
 
 document.addEventListener('DOMContentLoaded', () => {
