@@ -43,6 +43,7 @@ function createProductCard(product: Product, selectedProductsDiv: HTMLElement): 
   quantityInput.type = 'number';
   quantityInput.value = '1';
   quantityInput.min = '1';
+  quantityInput.id=(product.name.replace(/\s/g,''))+"_quantity_id";
 
   card.appendChild(checkbox);
   card.appendChild(productName);
@@ -61,27 +62,31 @@ function createProductCard(product: Product, selectedProductsDiv: HTMLElement): 
   return card;
 }
 
-function addToSelectedProducts(product: Product, quantity: number, selectedProductsDiv: HTMLElement): void {
-  const productItem = document.createElement('div');
-  productItem.classList.add('selected-product-item');
+function addToSelectedProducts(product: Product, quantity:number): void {
+  const selectedProductsDiv = document.getElementById('selectedProducts');
 
-  const quantitySpan = document.createElement('span');
-  quantitySpan.textContent = `${quantity}x`;
+  if (selectedProductsDiv) {
+    const productItem = document.createElement('div');
+    let productName=document.createElement('span');
+    productName.textContent = product.name;
+    let quantityEl=document.createElement("span");
+    quantityEl.textContent=quantity.toString();
+    
 
-  const productInfoSpan = document.createElement('span');
-  productInfoSpan.textContent = `${product.name} - ${getSelectedVariant(product)}`;
 
-  const removeButton = document.createElement('button');
-  removeButton.textContent = 'x';
-  removeButton.addEventListener('click', () => {
-    removeProductFromSelected(product, productItem, selectedProductsDiv);
-  });
+    let button=document.createElement('button');
+    button.type="button";
+    button.textContent="x";
+    button.id=(product.name.replace(/\s/g,''))+"_button_remove_id";
 
-  productItem.appendChild(quantitySpan);
-  productItem.appendChild(productInfoSpan);
-  productItem.appendChild(removeButton);
+    productItem.appendChild(quantityEl)
+    productItem.appendChild(productName);
+    productItem.appendChild(button);
 
-  selectedProductsDiv.appendChild(productItem);
+    selectedProductsDiv.appendChild(productItem);
+  } else {
+    console.error("Elemento 'selectedProducts' non trovato.");
+  }
 }
 
 function removeFromSelectedProducts(product: Product, selectedProductsDiv: HTMLElement): void {
