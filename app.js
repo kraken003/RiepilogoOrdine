@@ -1,5 +1,8 @@
+var _a;
 //script
 import { Product } from './classi.js';
+import { OrderLineItem } from './classi.js';
+var listaOrdini = [];
 document.addEventListener('DOMContentLoaded', () => {
     const product1 = new Product('1', 'Prodotto 1', ['Variante A', 'Variante B'], 'Descrizione prodotto 1', 10, 'Retailer 1');
     const product2 = new Product('2', 'Prodotto 2', ['Variante X', 'Variante Y'], 'Descrizione prodotto 2', 20, 'Retailer 2');
@@ -65,6 +68,8 @@ function addToSelectedProducts(product, quantity, selectedProductsDiv) {
     productItem.appendChild(quantitySpan);
     productItem.appendChild(productInfoSpan);
     productItem.appendChild(removeButton);
+    var ordineSingolo = new OrderLineItem(product.code, product, product.price, quantity);
+    listaOrdini.push(ordineSingolo);
     selectedProductsDiv.appendChild(productItem);
 }
 function removeFromSelectedProducts(product, selectedProductsDiv) {
@@ -73,6 +78,11 @@ function removeFromSelectedProducts(product, selectedProductsDiv) {
         const quantitySpan = item.querySelector('span');
         if (quantitySpan && quantitySpan.textContent && quantitySpan.textContent.includes(product.name)) {
             selectedProductsDiv.removeChild(item);
+            for (let ind = 0; ind < listaOrdini.length; ind++) {
+                if (listaOrdini[ind].product.name == product.name) {
+                    listaOrdini.splice(ind, 1);
+                }
+            }
             break;
         }
     }
@@ -88,7 +98,27 @@ function getSelectedVariant(product) {
     }
     return '';
 }
-function aperturaModalePadre() {
-    var modale = document.querySelector("");
-    modale.classList.remove("d-none");
+(_a = document.querySelector("#nextButton")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
+    aperturaModalePadre(listaOrdini);
+});
+function aperturaModalePadre(listaProdotti) {
+    var modale = document.querySelector("#myModal");
+    modale === null || modale === void 0 ? void 0 : modale.classList.remove("d-none");
+    let backGrModale = document.querySelector(".background-Modale");
+    backGrModale === null || backGrModale === void 0 ? void 0 : backGrModale.classList.add("modalEE");
+    var selectedProductsModal = document.querySelector("#selectedProductsModal");
+    selectedProductsModal === null || selectedProductsModal === void 0 ? void 0 : selectedProductsModal.classList.remove("d-none");
+    for (let prodottoSing of listaProdotti) {
+        var rigaProdotto = document.createElement("div");
+        var quantita = document.createElement("input");
+        quantita.type = "number";
+        quantita.value = prodottoSing.quantity.toString();
+        quantita.min = "1";
+        var nomeProdotto = document.createElement("span");
+        nomeProdotto.textContent = prodottoSing.product.name;
+        rigaProdotto.appendChild(nomeProdotto);
+        rigaProdotto.appendChild(quantita);
+        selectedProductsModal === null || selectedProductsModal === void 0 ? void 0 : selectedProductsModal.appendChild(rigaProdotto);
+        console.log(prodottoSing);
+    }
 }
