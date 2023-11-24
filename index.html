@@ -17,7 +17,12 @@
 
 </div>
 <div>
-  <button onclick="aperturaModalePadre()", id="nextModalButton">Next</button>
+  <button id="nextButton" onclick="openModal()">Next</button>
+</div>
+<div id="myModal" class="modal">
+  <div id="selectedProductsModal" class="modal-content"></div>
+  <button id="nextModalButton" onclick="nextModal()">Next</button>
+  <button id="backModalButton" onclick="closeModal()">Back</button>
 </div>
 <script type="module" src="app.js"></script>
 </body>
