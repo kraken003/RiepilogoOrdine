@@ -45,3 +45,5 @@ export class Product {
         this.retailer = retailer;
     }
 }
+var coloriCiabatte = ["rosa", "rosso", "blu"];
+var prodotto1 = new Product("abc", "Ciabatte", coloriCiabatte, "Ciabatte belle", 45, "Ciccio&Co");
