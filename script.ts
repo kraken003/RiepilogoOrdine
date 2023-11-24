@@ -1,8 +1,8 @@
-import{Product} from "classi.js";
-
+import { Product } from "./classi.js";
 
 var coloriCiabatte=["rosa","rosso","blu"];
 var prodotto1 :Product=new Product("abc","Ciabatte",coloriCiabatte,"Ciabatte belle",45,"Ciccio&Co");
+
 
 const prodotto=document.querySelector("#prodotto");
 
@@ -13,6 +13,6 @@ for(let product of listaProdotti){
     var figliCard=card?.firstChild?.childNodes
     
     if(card?.hasChildNodes){
-        console.log(figliCard)
+        console.log(figliCard);
     }
-}
+} 

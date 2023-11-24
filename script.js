@@ -1,5 +1,5 @@
 var _a;
-import { Product } from "classi.js";
+import { Product } from "./classi.js";
 var coloriCiabatte = ["rosa", "rosso", "blu"];
 var prodotto1 = new Product("abc", "Ciabatte", coloriCiabatte, "Ciabatte belle", 45, "Ciccio&Co");
 const prodotto = document.querySelector("#prodotto");

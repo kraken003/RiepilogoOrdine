@@ -12,7 +12,7 @@ export class Customer {
     ) {}
   }
 
-  export class Address {
+export class Address {
   constructor(
     public street: string,
     public city: string,
