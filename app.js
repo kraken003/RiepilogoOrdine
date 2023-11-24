@@ -1,4 +1,4 @@
-var _a, _b, _c, _d;
+var _a, _b, _c, _d, _e;
 //script
 import { Product, OrderLineItem, Order, Address } from './classi.js';
 var listaOrdini = [];
@@ -9,6 +9,8 @@ var indirizzoDiSpedizione;
 var selectedProductsModal = document.querySelector("#selectedProductsModal");
 var billingAddress = document.querySelector("#billingAddress");
 var riepilogoOrdine = document.querySelector("#riepilogoOrdine");
+var modale = document.querySelector("#myModal");
+let backGrModale = document.querySelector(".background-Modale");
 document.addEventListener('DOMContentLoaded', () => {
     const product1 = new Product('1', 'Prodotto 1', ['Variante A', 'Variante B'], 'Descrizione prodotto 1', 10, 'Retailer 1');
     const product2 = new Product('2', 'Prodotto 2', ['Variante X', 'Variante Y'], 'Descrizione prodotto 2', 20, 'Retailer 2');
@@ -44,10 +46,12 @@ function createProductCard(product, selectedProductsDiv) {
     quantityInput.type = 'number';
     quantityInput.value = '1';
     quantityInput.min = '1';
+    quantityInput.classList.add("form-control");
     card.appendChild(checkbox);
     card.appendChild(productName);
     card.appendChild(variantSelect);
     card.appendChild(quantityInput);
+    card.classList.add("border", "border-secondary");
     checkbox.addEventListener('change', () => {
         if (checkbox.checked) {
             const quantity = +quantityInput.value;
@@ -108,9 +112,7 @@ function getSelectedVariant(product) {
     aperturaModalePadre(listaOrdini);
 });
 function aperturaModalePadre(listaProdotti) {
-    var modale = document.querySelector("#myModal");
     modale === null || modale === void 0 ? void 0 : modale.classList.remove("d-none");
-    let backGrModale = document.querySelector(".background-Modale");
     backGrModale === null || backGrModale === void 0 ? void 0 : backGrModale.classList.add("modalEE");
     selectedProductsModal === null || selectedProductsModal === void 0 ? void 0 : selectedProductsModal.classList.remove("d-none");
     for (let prodottoSing of listaProdotti) {
@@ -140,13 +142,18 @@ function nextToBilling() {
     selectedProductsModal === null || selectedProductsModal === void 0 ? void 0 : selectedProductsModal.classList.add("d-none");
     billingAddress === null || billingAddress === void 0 ? void 0 : billingAddress.classList.remove("d-none");
 }
+//event per tornare al body
+(_c = document.querySelector("#backModalButton")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", () => {
+    backGrModale === null || backGrModale === void 0 ? void 0 : backGrModale.classList.remove("modalEE");
+    modale === null || modale === void 0 ? void 0 : modale.classList.add("d-none");
+});
 //event per mettere lo stesso indirizzo a spedizione e fatturazione
-(_c = document.querySelector("#stessiIndirizzi")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", () => {
+(_d = document.querySelector("#stessiIndirizzi")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", () => {
     var _a;
     (_a = document.querySelector(".fatturazione")) === null || _a === void 0 ? void 0 : _a.classList.toggle("d-none");
 });
 //event per proseguire al riepilogo
-(_d = document.querySelector("#nextToRiepilogo")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", () => {
+(_e = document.querySelector("#nextToRiepilogo")) === null || _e === void 0 ? void 0 : _e.addEventListener("click", () => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
     (_a = document.querySelector("#billingAddress")) === null || _a === void 0 ? void 0 : _a.classList.add("d-none");
     (_b = document.querySelector("#riepilogoOrdine")) === null || _b === void 0 ? void 0 : _b.classList.remove("d-none");

@@ -10,6 +10,9 @@ var selectedProductsModal = document.querySelector("#selectedProductsModal");
 var billingAddress = document.querySelector("#billingAddress");
 var riepilogoOrdine = document.querySelector("#riepilogoOrdine");
 
+var modale = document.querySelector("#myModal");
+let backGrModale = document.querySelector(".background-Modale");
+
 document.addEventListener('DOMContentLoaded', () => {
 
   const product1 = new Product('1', 'Prodotto 1', ['Variante A', 'Variante B'], 'Descrizione prodotto 1', 10, 'Retailer 1');
@@ -52,11 +55,13 @@ function createProductCard(product: Product, selectedProductsDiv: HTMLElement): 
   quantityInput.type = 'number';
   quantityInput.value = '1';
   quantityInput.min = '1';
+  quantityInput.classList.add("form-control");
 
   card.appendChild(checkbox);
   card.appendChild(productName);
   card.appendChild(variantSelect);
   card.appendChild(quantityInput);
+  card.classList.add("border","border-secondary",);
 
   checkbox.addEventListener('change', () => {
     if (checkbox.checked) {
@@ -135,10 +140,8 @@ document.querySelector("#nextButton")?.addEventListener("click", () => {
 });
 function aperturaModalePadre(listaProdotti: OrderLineItem[]) {
 
-  var modale = document.querySelector("#myModal");
   modale?.classList.remove("d-none");
 
-  let backGrModale = document.querySelector(".background-Modale");
   backGrModale?.classList.add("modalEE");
 
   selectedProductsModal?.classList.remove("d-none");
@@ -174,6 +177,13 @@ function nextToBilling() {
   selectedProductsModal?.classList.add("d-none");
   billingAddress?.classList.remove("d-none");
 }
+//event per tornare al body
+document.querySelector("#backModalButton")?.addEventListener("click", () => {
+  backGrModale?.classList.remove("modalEE");
+  modale?.classList.add("d-none");
+});
+
+
 //event per mettere lo stesso indirizzo a spedizione e fatturazione
 document.querySelector("#stessiIndirizzi")?.addEventListener("click", () => {
   document.querySelector(".fatturazione")?.classList.toggle("d-none");
