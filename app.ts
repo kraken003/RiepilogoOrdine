@@ -61,14 +61,14 @@ function createProductCard(product: Product, selectedProductsDiv: HTMLElement): 
   card.appendChild(productName);
   card.appendChild(variantSelect);
   card.appendChild(quantityInput);
-  card.classList.add("border","border-secondary",);
+  card.classList.add("border", "border-secondary",);
 
   checkbox.addEventListener('change', () => {
     if (checkbox.checked) {
       const quantity = +quantityInput.value;
       addToSelectedProducts(product, quantity, selectedProductsDiv);
     } else {
-      removeFromSelectedProducts(product, selectedProductsDiv);
+     /*  removeFromSelectedProducts(product, selectedProductsDiv); */
     }
   });
 
@@ -76,29 +76,50 @@ function createProductCard(product: Product, selectedProductsDiv: HTMLElement): 
 }
 
 function addToSelectedProducts(product: Product, quantity: number, selectedProductsDiv: HTMLElement): void {
-  const productItem = document.createElement('div');
-  productItem.classList.add('selected-product-item');
+  var isThere = false;
+  if(listaOrdini.length>0){
 
-  const quantitySpan = document.createElement('span');
-  quantitySpan.textContent = `${quantity}x`;
+    for(let prodottoSingolo of listaOrdini){
+      if(prodottoSingolo.product.code!=product.code){
+        isThere=true;
+      }
+    }
+  }else{
+    isThere=true;
+  }
+    if (isThere) {
 
-  const productInfoSpan = document.createElement('span');
-  productInfoSpan.textContent = `${product.name} - ${getSelectedVariant(product)}`;
+    const productItem = document.createElement('div');
+    productItem.classList.add('selected-product-item');
 
-  const removeButton = document.createElement('button');
-  removeButton.textContent = 'x';
-  removeButton.addEventListener('click', () => {
-    removeProductFromSelected(product, productItem, selectedProductsDiv);
-  });
+    const quantitySpan = document.createElement('span');
+    quantitySpan.id=`id_Quantity_${product.code}`;
+    quantitySpan.textContent = `${quantity}x `;
 
-  productItem.appendChild(quantitySpan);
-  productItem.appendChild(productInfoSpan);
-  productItem.appendChild(removeButton);
+    const productInfoSpan = document.createElement('span');
+    productInfoSpan.textContent = `${product.name} - ${getSelectedVariant(product)}`;
 
-  var ordineSingolo = new OrderLineItem(product.code, product, product.price, quantity);
-  listaOrdini.push(ordineSingolo);
 
-  selectedProductsDiv.appendChild(productItem);
+    const removeButton = document.createElement('button');
+    removeButton.textContent = 'x';
+    removeButton.addEventListener('click', () => {
+      removeProductFromSelected(product, productItem, selectedProductsDiv);
+    });
+
+    productItem.appendChild(quantitySpan);
+    productItem.appendChild(productInfoSpan);
+    productItem.appendChild(removeButton);
+
+    var ordineSingolo = new OrderLineItem(product.code, product, product.price, quantity);
+    listaOrdini.push(ordineSingolo);
+
+    selectedProductsDiv.appendChild(productItem);
+  }else{
+    for(let prodottoSingolo of listaOrdini){
+      prodottoSingolo.quantity+=quantity;
+      document.querySelector(`#id_Quantity_${product.code}`)?.textContent=prodottoSingolo.quantity+"x ";
+      console.log(prodottoSingolo.quantity);
+  }
 }
 
 function removeFromSelectedProducts(product: Product, selectedProductsDiv: HTMLElement): void {
@@ -158,7 +179,11 @@ function aperturaModalePadre(listaProdotti: OrderLineItem[]) {
     var nomeProdotto = document.createElement("span");
     nomeProdotto.textContent = prodottoSing.product.name;
 
+    var varianteProdotto = document.createElement("span");
+    varianteProdotto.textContent = document.querySelector(`#variantSelect_${prodottoSing.product.code}`)?.value;
+
     rigaProdotto.appendChild(nomeProdotto);
+    rigaProdotto.appendChild(varianteProdotto);
     rigaProdotto.appendChild(quantita);
 
     selectedProductsModal?.appendChild(rigaProdotto);
@@ -220,7 +245,7 @@ function riepilogo() {
     prodottoOrdinato.classList.add("border", "row");
 
     let nomeProdottoOrdine = document.createElement("div");
-    nomeProdottoOrdine.classList.add("col-6");
+    nomeProdottoOrdine.classList.add("col-5");
     nomeProdottoOrdine.textContent = singOrdin.product.name;
 
     let prezzoTotaleProdottoOrdine = document.createElement("div");
@@ -228,8 +253,8 @@ function riepilogo() {
     prezzoTotaleProdottoOrdine.textContent = (singOrdin.product.price * singOrdin.quantity).toString();
 
     let varianTotaleProdottoOrdine = document.createElement("div");
-    varianTotaleProdottoOrdine.classList.add("col-2");
-    varianTotaleProdottoOrdine.textContent = "da fare";
+    varianTotaleProdottoOrdine.classList.add("col-3");
+    varianTotaleProdottoOrdine.textContent = document.querySelector(`#variantSelect_${singOrdin.product.code}`)?.value;;
 
     let quantitaTotaleProdottoOrdine = document.createElement("div");
     quantitaTotaleProdottoOrdine.classList.add("col-2");
@@ -252,8 +277,8 @@ function riepilogo() {
   let spedizione = document.createElement("div");
   spedizione.classList.add("border", "row");
 
-  let titoloSpedzione=document.createElement("h4");
-  titoloSpedzione.textContent="Spedizione";
+  let titoloSpedzione = document.createElement("h4");
+  titoloSpedzione.textContent = "Spedizione";
   spedizione.appendChild(titoloSpedzione);
 
   let citta = document.createElement("span");
