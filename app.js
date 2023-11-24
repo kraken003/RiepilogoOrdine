@@ -32,13 +32,15 @@ function createProductCard(product) {
     quantityInput.type = 'number';
     quantityInput.value = '1';
     quantityInput.min = '1';
+    quantityInput.id = (product.name.replace(/\s/g, '')) + "_quantity_id";
     card.appendChild(checkbox);
     card.appendChild(productName);
     card.appendChild(variantSelect);
     card.appendChild(quantityInput);
     checkbox.addEventListener('change', () => {
         if (checkbox.checked) {
-            addToSelectedProducts(product);
+            let quantity = document.querySelector("#" + product.name.replace(/\s/g, '') + "_quantity_id");
+            addToSelectedProducts(product, quantity === null || quantity === void 0 ? void 0 : quantity.value);
         }
         else {
             removeFromSelectedProducts(product);
@@ -46,11 +48,21 @@ function createProductCard(product) {
     });
     return card;
 }
-function addToSelectedProducts(product) {
+function addToSelectedProducts(product, quantity) {
     const selectedProductsDiv = document.getElementById('selectedProducts');
     if (selectedProductsDiv) {
         const productItem = document.createElement('div');
-        productItem.textContent = product.name;
+        let productName = document.createElement('span');
+        productName.textContent = product.name;
+        let quantityEl = document.createElement("span");
+        quantityEl.textContent = quantity.toString();
+        let button = document.createElement('button');
+        button.type = "button";
+        button.textContent = "x";
+        button.id = (product.name.replace(/\s/g, '')) + "_button_remove_id";
+        productItem.appendChild(quantityEl);
+        productItem.appendChild(productName);
+        productItem.appendChild(button);
         selectedProductsDiv.appendChild(productItem);
     }
     else {
