@@ -1,4 +1,4 @@
-import {Product} from './classi.js';
+import { Product } from './classi.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -7,18 +7,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const product3 = new Product('3', 'Prodotto 3', ['Variante P', 'Variante Q'], 'Descrizione prodotto 3', 15, 'Retailer 3');
 
   const productsListDiv = document.getElementById('productsList');
+  const selectedProductsDiv = document.getElementById('selectedProducts');
 
-  if (productsListDiv) {
+  if (productsListDiv && selectedProductsDiv) {
     [product1, product2, product3].forEach(product => {
-      const productCard = createProductCard(product);
+      const productCard = createProductCard(product, selectedProductsDiv);
       productsListDiv.appendChild(productCard);
     });
   } else {
-    console.error("Elemento 'productsList' non trovato.");
+    console.error("Elemento 'productsList' o 'selectedProducts' non trovato.");
   }
 });
 
-function createProductCard(product: Product): HTMLDivElement {
+function createProductCard(product: Product, selectedProductsDiv: HTMLElement): HTMLDivElement {
   const card = document.createElement('div');
   card.classList.add('product-card');
 
@@ -29,6 +30,7 @@ function createProductCard(product: Product): HTMLDivElement {
   productName.textContent = product.name;
 
   const variantSelect = document.createElement('select');
+  variantSelect.id = `variantSelect_${product.code}`; // Aggiungi un id univoco
   product.variants.forEach(variant => {
     const option = document.createElement('option');
     option.value = variant;
@@ -49,10 +51,10 @@ function createProductCard(product: Product): HTMLDivElement {
 
   checkbox.addEventListener('change', () => {
     if (checkbox.checked) {
-      let quantity=document.querySelector("#"+product.name.replace(/\s/g,'')+"_quantity_id");
-      addToSelectedProducts(product, quantity?.value);
+      const quantity = +quantityInput.value;
+      addToSelectedProducts(product, quantity, selectedProductsDiv);
     } else {
-      removeFromSelectedProducts(product);
+      removeFromSelectedProducts(product, selectedProductsDiv);
     }
   });
 
@@ -76,7 +78,7 @@ function addToSelectedProducts(product: Product, quantity:number): void {
     button.textContent="x";
     button.id=(product.name.replace(/\s/g,''))+"_button_remove_id";
 
-    productItem.appendChild(quantityEl);
+    productItem.appendChild(quantityEl)
     productItem.appendChild(productName);
     productItem.appendChild(button);
 
@@ -86,19 +88,29 @@ function addToSelectedProducts(product: Product, quantity:number): void {
   }
 }
 
-function removeFromSelectedProducts(product: Product): void {
-  const selectedProductsDiv = document.getElementById('selectedProducts');
+function removeFromSelectedProducts(product: Product, selectedProductsDiv: HTMLElement): void {
+  const productItems = selectedProductsDiv.getElementsByClassName('selected-product-item');
 
-  if (selectedProductsDiv) {
-    const productItems = selectedProductsDiv.getElementsByTagName('div');
-
-    for (const item of productItems) {
-      if (item.textContent === product.name) {
-        selectedProductsDiv.removeChild(item);
-        break;
-      }
+  for (const item of productItems) {
+    const quantitySpan = item.querySelector('span');
+    if (quantitySpan && quantitySpan.textContent && quantitySpan.textContent.includes(product.name)) {
+      selectedProductsDiv.removeChild(item);
+      break;
     }
-  } else {
-    console.error("Elemento 'selectedProducts' non trovato.");
   }
+}
+
+function removeProductFromSelected(product: Product, productItem: HTMLDivElement, selectedProductsDiv: HTMLElement): void {
+  selectedProductsDiv.removeChild(productItem);
+}
+
+function getSelectedVariant(product: Product): string {
+  const variantSelect = document.getElementById(`variantSelect_${product.code}`) as HTMLSelectElement;
+
+  if (variantSelect && variantSelect.options.length > 0) {
+    const selectedOption = variantSelect.options[variantSelect.selectedIndex];
+    return selectedOption.value;
+  }
+
+  return '';
 }
