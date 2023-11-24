@@ -88,3 +88,7 @@ function getSelectedVariant(product) {
     }
     return '';
 }
+function aperturaModalePadre() {
+    var modale = document.querySelector("");
+    modale.classList.remove("d-none");
+}

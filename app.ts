@@ -1,5 +1,9 @@
 //script
 import { Product } from './classi.js';
+import { OrderLineItem } from './classi.js';
+import { Order } from './classi.js';
+
+var listaOrdini :OrderLineItem[];
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -81,6 +85,9 @@ function addToSelectedProducts(product: Product, quantity: number, selectedProdu
   productItem.appendChild(productInfoSpan);
   productItem.appendChild(removeButton);
 
+  var ordineSingolo=new OrderLineItem(product.code, product, product.price, quantity);
+  listaOrdini.push(ordineSingolo);
+
   selectedProductsDiv.appendChild(productItem);
 }
 
@@ -91,6 +98,11 @@ function removeFromSelectedProducts(product: Product, selectedProductsDiv: HTMLE
     const quantitySpan = item.querySelector('span');
     if (quantitySpan && quantitySpan.textContent && quantitySpan.textContent.includes(product.name)) {
       selectedProductsDiv.removeChild(item);
+      for(let ind=0; ind<listaOrdini.length; ind++){
+        if(listaOrdini[ind].product.name==product.name){
+          listaOrdini.splice(ind,1);
+        }
+      }
       break;
     }
   }
@@ -110,3 +122,28 @@ function getSelectedVariant(product: Product): string {
 
   return '';
 }
+function aperturaModalePadre(listaProdotti: OrderLineItem[]){
+  var modale=document.querySelector("");
+  modale?.classList.remove("d-none");
+
+  for(let prodottoSing of listaProdotti){
+    var rigaProdotto=document.createElement("div");
+    
+    var quantita=document.createElement("input");
+    quantita.type="number";
+    quantita.value=prodottoSing.quantity.toString();
+    quantita.min="1";
+
+    var nomeProdotto=document.createElement("span");
+    nomeProdotto.textContent=prodottoSing.product.name;
+
+    rigaProdotto.appendChild(nomeProdotto);
+    rigaProdotto.appendChild(quantita);
+
+    modale?.appendChild(rigaProdotto);
+  }
+
+
+
+}
+
