@@ -6,30 +6,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
   <title>Selezione Prodotti</title>
 </head>
 
 <body>
-<div class="background-Modale">
+  <div class="background-Modale">
 
-  <div id="productsList">
-    <h2>Prodotti</h2>
-    
+    <div id="productsList">
+      <h2>Prodotti</h2>
+
+    </div>
+
+    <div id="selectedProducts">
+      <h2>Prodotti Selezionati</h2>
+
+    </div>
+    <div>
+      <button id="nextButton">Next</button>
+    </div>
   </div>
-  
-  <div id="selectedProducts">
-    <h2>Prodotti Selezionati</h2>
-    
-  </div>
-  <div>
-    <button id="nextButton">Next</button>
-  </div>  
-</div>
-  <div id="myModal" class="d-none border border-secondary m-3 p-3 " >
-    <div id="selectedProductsModal" class="d-none"></div>
-    <button id="nextModalButton" onclick="nextModal()">Next</button>
-    <button id="backModalButton" onclick="closeModal()">Back</button>
+  <div id="myModal" class="d-none border border-secondary m-3 p-3 ">
+    <div id="selectedProductsModal" class="d-none">
+      <button id="nextModalButton">Next</button>
+      <button id="backModalButton">Back</button>
+    </div>
+    <div id="billingAddress" class="d-none">
+      <div class="col spedizione">
+        <label for="stessiIndirizzi">Indirizzo di spezione e fatturazione identici:</label>
+        <input type="checkbox" name="stessiIndirizzi" id="stessiIndirizzi">
+        <h4>Info di spedizione</h4>
+        <input type="text" id="streetSpedizione" placeholder="Inserisci la via">
+        <input type="text" id="citySpedizione" placeholder="Inserisci la città">
+        <input type="text" id="stateSpedizione" placeholder="Inserisci lo stato">
+        <input type="text" id="postalCodeSpedizione" placeholder="Inserisi il CAP">
+      </div>
+      <div class="col fatturazione">
+        <h4>Info di fatturazione</h4>
+        <input type="text" id="streetFatturazione" placeholder="Inserisci la via">
+        <input type="text" id="cityFatturazione" placeholder="Inserisci la città">
+        <input type="text" id="stateFatturazione" placeholder="Inserisci lo stato">
+        <input type="text" id="postalCodeFatturazione" placeholder="Inserisi il CAP">
+      </div>
+      <button id="nextToRiepilogo">next</button>
+    </div>
+    <div id="riepilogoOrdine" class="d-none">
+      
+    </div>
   </div>
   <script type="module" src="app.js"></script>
 </body>

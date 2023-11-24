@@ -1,9 +1,14 @@
 //script
-import { Product } from './classi.js';
-import { OrderLineItem } from './classi.js';
-import { Order } from './classi.js';
+import { Product, OrderLineItem, Order, Address, Customer } from './classi.js';
 
 var listaOrdini: OrderLineItem[] = [];
+var ordine: Order;
+var contatoreDiOrdini: number = 0;
+var indirizzoFatturazione: Address;
+var indirizzoDiSpedizione: Address;
+var selectedProductsModal = document.querySelector("#selectedProductsModal");
+var billingAddress = document.querySelector("#billingAddress");
+var riepilogoOrdine = document.querySelector("#riepilogoOrdine");
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -127,17 +132,15 @@ function getSelectedVariant(product: Product): string {
 
 document.querySelector("#nextButton")?.addEventListener("click", () => {
   aperturaModalePadre(listaOrdini);
-
 });
 function aperturaModalePadre(listaProdotti: OrderLineItem[]) {
-  
+
   var modale = document.querySelector("#myModal");
   modale?.classList.remove("d-none");
 
-  let backGrModale  = document.querySelector(".background-Modale");
+  let backGrModale = document.querySelector(".background-Modale");
   backGrModale?.classList.add("modalEE");
-  
-  var selectedProductsModal = document.querySelector("#selectedProductsModal");
+
   selectedProductsModal?.classList.remove("d-none");
 
   for (let prodottoSing of listaProdotti) {
@@ -147,6 +150,7 @@ function aperturaModalePadre(listaProdotti: OrderLineItem[]) {
     quantita.type = "number";
     quantita.value = prodottoSing.quantity.toString();
     quantita.min = "1";
+    quantita.id = prodottoSing.product.name.replace(/\s/g, '') + "_inputDue_id";
 
     var nomeProdotto = document.createElement("span");
     nomeProdotto.textContent = prodottoSing.product.name;
@@ -155,10 +159,108 @@ function aperturaModalePadre(listaProdotti: OrderLineItem[]) {
     rigaProdotto.appendChild(quantita);
 
     selectedProductsModal?.appendChild(rigaProdotto);
-    console.log(prodottoSing);
   }
-
-
-
 }
+//event per aggiornare le quantità dal modal
+document.querySelector("#nextModalButton")?.addEventListener("click", () => {
+  for (let singOrd of listaOrdini) {
+    let stringaIDInput = "#" + singOrd.product.name.replace(/\s/g, '') + "_inputDue_id";
+    let inputNuovo = document.querySelector(stringaIDInput);
+    singOrd.quantity = inputNuovo?.value;
+  }
+  nextToBilling();
+});
+function nextToBilling() {
+  selectedProductsModal?.classList.add("d-none");
+  billingAddress?.classList.remove("d-none");
+}
+//event per mettere lo stesso indirizzo a spedizione e fatturazione
+document.querySelector("#stessiIndirizzi")?.addEventListener("click", () => {
+  document.querySelector(".fatturazione")?.classList.toggle("d-none");
 
+});
+//event per proseguire al riepilogo
+document.querySelector("#nextToRiepilogo")?.addEventListener("click", () => {
+  document.querySelector("#billingAddress")?.classList.add("d-none");
+  document.querySelector("#riepilogoOrdine")?.classList.remove("d-none");
+
+  indirizzoDiSpedizione = new Address(
+    document.querySelector("#streetSpedizione")?.value,
+    document.querySelector("#citySpedizione")?.value,
+    document.querySelector("#stateSpedizione")?.value,
+    document.querySelector("#postalCodeSpedizione")?.value
+  )
+  if (!document.querySelector("#stessiIndirizzi")?.checked) {
+    indirizzoFatturazione = new Address(
+      document.querySelector("#streetFatturazione")?.value,
+      document.querySelector("#cityFatturazione")?.value,
+      document.querySelector("#stateFatturazione")?.value,
+      document.querySelector("#postalCodeFatturazione")?.value
+    )
+  } else {
+    indirizzoFatturazione = indirizzoDiSpedizione;
+  }
+  riepilogo();
+});
+function riepilogo() {
+  let prezzoTotale: number = 0;
+  for (let singOrdin of listaOrdini) {
+    prezzoTotale += singOrdin.amount;
+    let prodottoOrdinato = document.createElement("div");
+    prodottoOrdinato.classList.add("border", "row");
+
+    let nomeProdottoOrdine = document.createElement("div");
+    nomeProdottoOrdine.classList.add("col-6");
+    nomeProdottoOrdine.textContent = singOrdin.product.name;
+
+    let prezzoTotaleProdottoOrdine = document.createElement("div");
+    prezzoTotaleProdottoOrdine.classList.add("col-2");
+    prezzoTotaleProdottoOrdine.textContent = (singOrdin.product.price * singOrdin.quantity).toString();
+
+    let varianTotaleProdottoOrdine = document.createElement("div");
+    varianTotaleProdottoOrdine.classList.add("col-2");
+    varianTotaleProdottoOrdine.textContent = "da fare";
+
+    let quantitaTotaleProdottoOrdine = document.createElement("div");
+    quantitaTotaleProdottoOrdine.classList.add("col-2");
+    quantitaTotaleProdottoOrdine.textContent = singOrdin.quantity.toString();
+
+    prodottoOrdinato.appendChild(nomeProdottoOrdine);
+    prodottoOrdinato.appendChild(prezzoTotaleProdottoOrdine);
+    prodottoOrdinato.appendChild(varianTotaleProdottoOrdine);
+    prodottoOrdinato.appendChild(quantitaTotaleProdottoOrdine);
+
+    riepilogoOrdine?.appendChild(prodottoOrdinato);
+  }
+  ordine = new Order((contatoreDiOrdini += 1).toString(),
+    new Date(Date.now()),
+    prezzoTotale,
+    listaOrdini);
+
+
+
+  let spedizione = document.createElement("div");
+  spedizione.classList.add("border", "row");
+
+  let titoloSpedzione=document.createElement("h4");
+  titoloSpedzione.textContent="Spedizione";
+  spedizione.appendChild(titoloSpedzione);
+
+  let citta = document.createElement("span");
+  citta.textContent = indirizzoDiSpedizione.city;
+  spedizione.appendChild(citta);
+
+  let postalCode = document.createElement("span");
+  postalCode.textContent = indirizzoDiSpedizione.postalCode;
+  spedizione.appendChild(postalCode);
+
+  let state = document.createElement("span");
+  state.textContent = indirizzoDiSpedizione.state;
+  spedizione.appendChild(state);
+
+  let street = document.createElement("span");
+  street.textContent = indirizzoDiSpedizione.street;
+  spedizione.appendChild(street);
+
+  riepilogoOrdine?.appendChild(spedizione);
+}
